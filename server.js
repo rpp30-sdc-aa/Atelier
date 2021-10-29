@@ -44,7 +44,7 @@ const s3 = new AWS.S3({
 
 // router for handling valid products url string
 app.get('/detailState/*', async (req, res) => {
-  let base = 'https://app-hrsei-api.herokuapp.com/api/fec2/hr-rpp';
+  let base = 'https://app-hrsei-api.herokuapp.com/api/fec2/hr-rfp';
   console.log(req.url, req.params);
   base += `/${req.params['0']}`;
 
@@ -54,12 +54,12 @@ app.get('/detailState/*', async (req, res) => {
   console.log('PRODID', req.body);
   let optionsReviews = {
     method: 'GET',
-    url: `https://app-hrsei-api.herokuapp.com/api/fec2/hr-rpp/reviews?product_id=${productId}&count=100`,
+    url: `http://localhost:3005/reviews?product_id=${productId}&count=100`,
     headers: { Authorization: TOKEN },
   };
   let optionsReviewsMeta = {
     method: 'GET',
-    url: `https://app-hrsei-api.herokuapp.com/api/fec2/hr-rpp/reviews/meta?product_id=${productId}`,
+    url: `http://localhost:3005/reviews/meta?product_id=${productId}`,
     headers: { Authorization: TOKEN },
   };
 
@@ -97,10 +97,14 @@ app.get('/detailState/*', async (req, res) => {
 });
 // Router handler for processing api endpoints
 app.all('/api/*', (req, res) => {
-  let base = 'https://app-hrsei-api.herokuapp.com/api/fec2/hr-rpp';
+  let base = 'https://app-hrsei-api.herokuapp.com/api/fec2/hr-rfp';
   let method = req.method;
   let url = req.url.substring(4);
   let query = req.query;
+
+  if (url.includes('reviews')) {
+    base = 'http://localhost:3005';
+  }
 
   base += url;
   let options = {
